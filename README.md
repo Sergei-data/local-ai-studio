@@ -1,1 +1,1 @@
-# ai_project_backend
+# local-ai-studio
