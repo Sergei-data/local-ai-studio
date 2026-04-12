@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 import httpx
 
+from app.api.tasks import router as tasks_router
 from app.core.config import settings
 
 app = FastAPI(title=settings.app_name)
+app.include_router(tasks_router)
 
 
 @app.get("/")
@@ -12,6 +14,7 @@ def root() -> dict:
         "message": "Local AI Studio backend is running",
         "health": "/health",
         "ollama_health": "/ollama/health",
+        "tasks": "/tasks",
     }
 
 
