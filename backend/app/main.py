@@ -1,11 +1,16 @@
 from fastapi import FastAPI
 import httpx
 
-from app.api.tasks import router as tasks_router
+from app.api.routes.architecture import router as architecture_router
+from app.api.routes.tasks import router as tasks_router
+from app.api.routes.health import router as health_router
 from app.core.config import settings
 
 app = FastAPI(title=settings.app_name)
+
+app.include_router(health_router)
 app.include_router(tasks_router)
+app.include_router(architecture_router)
 
 
 @app.get("/")
@@ -15,30 +20,5 @@ def root() -> dict:
         "health": "/health",
         "ollama_health": "/ollama/health",
         "tasks": "/tasks",
+        "architecture": "/architecture/construct",
     }
-
-
-@app.get("/health")
-def health() -> dict:
-    return {"status": "ok", "service": settings.app_name}
-
-
-@app.get("/ollama/health")
-async def ollama_health() -> dict:
-    try:
-        async with httpx.AsyncClient(timeout=10.0) as client:
-            response = await client.get(f"{settings.ollama_base_url}/api/tags")
-            response.raise_for_status()
-            data = response.json()
-
-        return {
-            "status": "ok",
-            "ollama_base_url": settings.ollama_base_url,
-            "models_count": len(data.get("models", [])),
-        }
-    except Exception as exc:
-        return {
-            "status": "error",
-            "ollama_base_url": settings.ollama_base_url,
-            "detail": str(exc),
-        }

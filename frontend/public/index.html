@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Local AI Studio</title>
+    <link rel="stylesheet" href="/assets/css/main.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="card hero">
+        <h1>Local AI Studio</h1>
+        <p>Конструктор архитектуры проекта</p>
+      </section>
+
+      <section class="card">
+        <h2>Проектирование архитектуры</h2>
+
+        <form id="architecture-form" class="form-grid">
+          <label>
+            <span>Название проекта</span>
+            <input type="text" name="project_name" value="shop-backend" required />
+          </label>
+
+          <label>
+            <span>Тип проекта</span>
+            <select name="project_type">
+              <option value="backend">backend</option>
+              <option value="fullstack">fullstack</option>
+              <option value="service">service</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Framework</span>
+            <select name="backend_framework">
+              <option value="fastapi">fastapi</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Архитектурный стиль</span>
+            <select name="architecture_style">
+              <option value="clean_architecture">clean_architecture</option>
+              <option value="layered">layered</option>
+              <option value="cqrs">cqrs</option>
+            </select>
+          </label>
+
+          <label>
+            <span>База данных</span>
+            <select name="database">
+              <option value="postgres">postgres</option>
+              <option value="sqlite">sqlite</option>
+              <option value="none">none</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Storage</span>
+            <select name="storage">
+              <option value="none">none</option>
+              <option value="local">local</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Object storage</span>
+            <select name="object_storage">
+              <option value="none">none</option>
+              <option value="minio">minio</option>
+              <option value="s3">s3</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Авторизация</span>
+            <select name="auth">
+              <option value="none">none</option>
+              <option value="jwt">jwt</option>
+              <option value="keycloak">keycloak</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Очереди</span>
+            <select name="queue">
+              <option value="none">none</option>
+              <option value="rabbitmq">rabbitmq</option>
+              <option value="kafka">kafka</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Кэш</span>
+            <select name="cache">
+              <option value="none">none</option>
+              <option value="redis">redis</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Миграции</span>
+            <select name="migrations">
+              <option value="alembic">alembic</option>
+              <option value="none">none</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Контейнеризация</span>
+            <select name="containerization">
+              <option value="docker_compose">docker_compose</option>
+              <option value="docker">docker</option>
+              <option value="none">none</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Gateway</span>
+            <select name="gateway">
+              <option value="nginx">nginx</option>
+              <option value="none">none</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Docs mode</span>
+            <select name="docs_mode">
+              <option value="official_docs">official_docs</option>
+              <option value="none">none</option>
+            </select>
+          </label>
+
+          <label class="full-width">
+            <span>Мониторинг</span>
+            <div class="chips">
+              <label class="chip"><input type="checkbox" name="monitoring" value="prometheus" /> Prometheus</label>
+              <label class="chip"><input type="checkbox" name="monitoring" value="grafana" /> Grafana</label>
+              <label class="chip"><input type="checkbox" name="monitoring" value="loki" /> Loki</label>
+            </div>
+          </label>
+
+          <label class="full-width">
+            <span>Тестирование</span>
+            <div class="chips">
+              <label class="chip"><input type="checkbox" name="testing" value="unit" checked /> Unit</label>
+              <label class="chip"><input type="checkbox" name="testing" value="integration" checked /> Integration</label>
+              <label class="chip"><input type="checkbox" name="testing" value="e2e" /> E2E</label>
+            </div>
+          </label>
+
+          <label class="full-width">
+            <span>Описание проекта</span>
+            <textarea
+              name="description"
+              rows="8"
+              required
+            >Backend для интернет-магазина с товарами, категориями, корзиной, заказами и авторизацией</textarea>
+          </label>
+
+          <div class="full-width actions">
+            <button type="button" id="build-architecture-btn">Построить архитектуру</button>
+            <button type="button" id="save-architecture-btn">Сохранить архитектуру</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Результат конструктора</h2>
+
+        <div id="architecture-status" class="muted">Пока ничего не построено</div>
+
+        <div class="result-grid">
+          <div class="result-block">
+            <h3>Summary</h3>
+            <pre id="summary-output">—</pre>
+          </div>
+
+          <div class="result-block">
+            <h3>Modules</h3>
+            <ul id="modules-output"></ul>
+          </div>
+
+          <div class="result-block">
+            <h3>Infra files</h3>
+            <ul id="infra-output"></ul>
+          </div>
+
+          <div class="result-block full-width">
+            <h3>Directory tree</h3>
+            <pre id="tree-output">—</pre>
+          </div>
+
+          <div class="result-block">
+            <h3>Generation steps</h3>
+            <ol id="steps-output"></ol>
+          </div>
+
+          <div class="result-block">
+            <h3>Test strategy</h3>
+            <ul id="tests-output"></ul>
+          </div>
+
+          <div class="result-block full-width">
+            <h3>Prompt template</h3>
+            <pre id="prompt-output">—</pre>
+          </div>
+
+          <div class="result-block full-width">
+            <h3>Module contracts</h3>
+            <div id="contracts-output" class="contracts-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Сохранённые архитектуры</h2>
+        <div id="drafts-list" class="drafts-grid">
+          <div class="muted">Сохранённых архитектур пока нет</div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/assets/js/app.js"></script>
+  </body>
+</html>

@@ -24,3 +24,4 @@ workspace/artifacts/*
 !workspace/generated/.gitkeep
 !workspace/logs/.gitkeep
 !workspace/artifacts/.gitkeep
+!workspace/specs/.gitkeep
